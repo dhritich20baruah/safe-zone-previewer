@@ -8,9 +8,11 @@ export default function SafeZoneCanvas() {
   const [activePlatform, setActivePlatform] = useState<Platform>("tiktok");
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [showGridOnly, setShowGridOnly] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const processFile = (file: File | undefined) => {
     if (file && file.type.startsWith("image/")) {
@@ -38,6 +40,21 @@ export default function SafeZoneCanvas() {
     processFile(e.dataTransfer.files?.[0]);
   };
 
+  const handleClearImage = () => {
+    // 1. Revoke the object URL to free up browser memory cache
+    if (imageSrc) {
+      URL.revokeObjectURL(imageSrc);
+    }
+
+    // 2. Reset states back to default
+    setImageSrc(null);
+
+    // 3. Reset the DOM input value so the same file can be re-uploaded safely
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   useEffect(() => {
     if (!imageSrc || !canvasRef.current) return;
 
@@ -63,7 +80,7 @@ export default function SafeZoneCanvas() {
       // 2. MATHEMATICS TO PRESERVE ASPECT RATIO (Letterboxing/Centering)
       const imgRatio = img.width / img.height;
       const canvasRatio = canvas.width / canvas.height;
-      
+
       let renderWidth, renderHeight, offsetX, offsetY;
 
       if (imgRatio > canvasRatio) {
@@ -89,7 +106,7 @@ export default function SafeZoneCanvas() {
 
       drawOverlays(ctx, canvas.width, canvas.height, activePlatform);
     };
-  }, [imageSrc, activePlatform]);
+  }, [imageSrc, activePlatform, showGridOnly]);
 
   //The mask overlay calculations
   const drawOverlays = (
@@ -98,6 +115,43 @@ export default function SafeZoneCanvas() {
     h: number,
     platform: Platform,
   ) => {
+    if (showGridOnly) {
+      ctx.strokeStyle = "rgba(239, 68, 68, 0.8)"; // Clean red line border
+      ctx.lineWidth = 4;
+      ctx.setLineDash([15, 10]); // Creates a dashed pattern [dash length, gap length]
+      
+      if (platform === "youtube") {
+        // Just highlight the bottom-right timestamp bounding area
+        ctx.strokeRect(w - 184 - 16, h - 44 - 16, 184, 44);
+      } else {
+        // TikTok / Reels standard layout boundary guides
+        const topMargin = 160;
+        const rightMargin = 140;
+        const bottomMargin = platform === "tiktok" ? 480 : 380;
+
+        // Draw top header boundary
+        ctx.beginPath();
+        ctx.moveTo(0, topMargin);
+        ctx.lineTo(w, topMargin);
+        ctx.stroke();
+
+        // Draw right sidebar interaction boundary
+        ctx.beginPath();
+        ctx.moveTo(w - rightMargin, topMargin);
+        ctx.lineTo(w - rightMargin, h - bottomMargin);
+        ctx.stroke();
+
+        // Draw bottom caption metadata boundary
+        ctx.beginPath();
+        ctx.moveTo(0, h - bottomMargin);
+        ctx.lineTo(w, h - bottomMargin);
+        ctx.stroke();
+      }
+
+      // Reset line dash setting so it doesn't affect other components later
+      ctx.setLineDash([]);
+      return; // Stop execution here so realistic UI elements don't draw
+    }
     // Helper function to draw rounded rectangles (useful for buttons/pills)
     const drawRoundRect = (
       x: number,
@@ -206,7 +260,7 @@ export default function SafeZoneCanvas() {
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
         ctx.fillText(label, centerX, yCoord + 65);
-      }
+      };
 
       drawActionIcon(750, "94.2K"); // Heart / Like
       drawActionIcon(890, "1,240"); // Comment bubble
@@ -258,7 +312,7 @@ export default function SafeZoneCanvas() {
       // INSTAGRAM REELS OVERLAYS (9:16)
       // ==========================================
       const centerX = w - 80;
-      
+
       // Bottom/Right Gradient block for text legibility
       ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
       // Sidebar Icons (Instagram Style)
@@ -268,8 +322,8 @@ export default function SafeZoneCanvas() {
         ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
         ctx.fill();
       };
-      
-      drawReelsIcon(900);  // Like
+
+      drawReelsIcon(900); // Like
       drawReelsIcon(1010); // Comment
       drawReelsIcon(1120); // DM / Paper Plane
       drawReelsIcon(1230); // Context menu (...)
@@ -279,10 +333,10 @@ export default function SafeZoneCanvas() {
       ctx.fillStyle = "#ffffff";
       ctx.font = "bold 28px sans-serif";
       ctx.fillText("instagram_user", 50, h - 200);
-      
+
       ctx.font = "26px sans-serif";
       ctx.fillText("Checking out alignment margins for reels! 🚀", 50, h - 150);
-    };
+    }
   };
 
   return (
@@ -311,16 +365,44 @@ export default function SafeZoneCanvas() {
 
         <div>
           <h3 className="font-semibold text-slate-700 mb-2">2. Upload Asset</h3>
-          <label className="block w-full text-center px-4 py-3 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg font-semibold text-sm cursor-pointer transition-colors border border-blue-200">
-            Choose Image File
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="hidden"
-            />
-          </label>
+          {!imageSrc ? (
+            // Show this upload trigger if no image is loaded
+            <label className="block w-full text-center px-4 py-3 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg font-semibold text-sm cursor-pointer transition-colors border border-blue-200">
+              Choose Image File
+              <input
+                ref={fileInputRef} // 👈 Attach the ref here
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            </label>
+          ) : (
+            // Show the Clear action button if an image is actively loaded
+            <button
+              onClick={handleClearImage}
+              className="w-full text-center px-4 py-3 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg font-semibold text-sm cursor-pointer transition-colors border border-rose-200"
+            >
+              Clear Image
+            </button>
+          )}
         </div>
+        {imageSrc && (
+          <div className="border-t border-slate-100 pt-4 mt-2">
+            <h3 className="font-semibold text-slate-700 mb-3">3. Preferences</h3>
+            <label className="flex items-center gap-3 cursor-pointer select-none group">
+              <input
+                type="checkbox"
+                checked={showGridOnly}
+                onChange={(e) => setShowGridOnly(e.target.checked)}
+                className="w-5 h-5 accent-blue-600 rounded cursor-pointer"
+              />
+              <span className="text-sm font-medium text-slate-600 group-hover:text-slate-900 transition-colors">
+                Show Safe-Zone Grid Only
+              </span>
+            </label>
+          </div>
+        )}
       </div>
 
       {/* Main Preview Board Canvas */}
