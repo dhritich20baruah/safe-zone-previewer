@@ -1,8 +1,7 @@
 @import "tailwindcss";
 
-/* Any custom global overrides or canvas utility styles can go here */
 body {
-  background-color: #f8fafc; /* slate-50 */
-  color: #0f172a;            /* slate-900 */
+  background-color: #0f172a;
+  color: #f1f5f9;
   font-family: sans-serif;
 }

@@ -30,9 +30,7 @@ export default function SafeZoneCanvas() {
     setIsDragging(true);
   };
 
-  const handleDragLeave = () => {
-    setIsDragging(false);
-  };
+  const handleDragLeave = () => setIsDragging(false);
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
@@ -41,18 +39,9 @@ export default function SafeZoneCanvas() {
   };
 
   const handleClearImage = () => {
-    // 1. Revoke the object URL to free up browser memory cache
-    if (imageSrc) {
-      URL.revokeObjectURL(imageSrc);
-    }
-
-    // 2. Reset states back to default
+    if (imageSrc) URL.revokeObjectURL(imageSrc);
     setImageSrc(null);
-
-    // 3. Reset the DOM input value so the same file can be re-uploaded safely
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   useEffect(() => {
@@ -77,38 +66,30 @@ export default function SafeZoneCanvas() {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 2. MATHEMATICS TO PRESERVE ASPECT RATIO (Letterboxing/Centering)
       const imgRatio = img.width / img.height;
       const canvasRatio = canvas.width / canvas.height;
 
       let renderWidth, renderHeight, offsetX, offsetY;
 
       if (imgRatio > canvasRatio) {
-        // Image is wider than the target canvas ratio
         renderWidth = canvas.width;
         renderHeight = canvas.width / imgRatio;
         offsetX = 0;
         offsetY = (canvas.height - renderHeight) / 2;
       } else {
-        // Image is taller than the target canvas ratio (like your cowboy asset on YouTube)
         renderWidth = canvas.height * imgRatio;
         renderHeight = canvas.height;
         offsetX = (canvas.width - renderWidth) / 2;
         offsetY = 0;
       }
 
-      // Fill background with a clean dark neutral color for empty frame space
-      ctx.fillStyle = "#1e293b"; // slate-800
+      ctx.fillStyle = "#1e293b";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Draw the image cleanly using computed centering ratios
       ctx.drawImage(img, offsetX, offsetY, renderWidth, renderHeight);
-
       drawOverlays(ctx, canvas.width, canvas.height, activePlatform);
     };
   }, [imageSrc, activePlatform, showGridOnly]);
 
-  //The mask overlay calculations
   const drawOverlays = (
     ctx: CanvasRenderingContext2D,
     w: number,
@@ -116,62 +97,36 @@ export default function SafeZoneCanvas() {
     platform: Platform,
   ) => {
     if (showGridOnly) {
-      ctx.strokeStyle = "rgba(239, 68, 68, 0.8)"; // Clean red line border
+      ctx.strokeStyle = "rgba(239, 68, 68, 0.8)";
       ctx.lineWidth = 4;
-      ctx.setLineDash([15, 10]); // Creates a dashed pattern [dash length, gap length]
+      ctx.setLineDash([15, 10]);
 
       if (platform === "youtube") {
-        // Just highlight the bottom-right timestamp bounding area
         ctx.strokeRect(w - 184 - 16, h - 44 - 16, 184, 44);
       } else {
-        // TikTok / Reels standard layout boundary guides
         const topMargin = 160;
         const rightMargin = 140;
-        const bottomMargin = platform === "tiktok" ? 480 : platform === "shorts" ? 420 : 380;
+        const bottomMargin =
+          platform === "tiktok" ? 480 : platform === "shorts" ? 420 : 380;
 
-        // Draw top header boundary
-        ctx.beginPath();
-        ctx.moveTo(0, topMargin);
-        ctx.lineTo(w, topMargin);
-        ctx.stroke();
-
-        // Draw right sidebar interaction boundary
-        ctx.beginPath();
-        ctx.moveTo(w - rightMargin, topMargin);
-        ctx.lineTo(w - rightMargin, h - bottomMargin);
-        ctx.stroke();
-
-        // Draw bottom caption metadata boundary
-        ctx.beginPath();
-        ctx.moveTo(0, h - bottomMargin);
-        ctx.lineTo(w, h - bottomMargin);
-        ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, topMargin); ctx.lineTo(w, topMargin); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(w - rightMargin, topMargin); ctx.lineTo(w - rightMargin, h - bottomMargin); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, h - bottomMargin); ctx.lineTo(w, h - bottomMargin); ctx.stroke();
       }
 
-      // Reset line dash setting so it doesn't affect other components later
       ctx.setLineDash([]);
-      return; // Stop execution here so realistic UI elements don't draw
+      return;
     }
-    // Helper function to draw rounded rectangles (useful for buttons/pills)
+
     const drawRoundRect = (
-      x: number,
-      y: number,
-      width: number,
-      height: number,
-      radius: number,
-      fillStyle: string,
+      x: number, y: number, width: number, height: number, radius: number, fillStyle: string,
     ) => {
       ctx.beginPath();
       ctx.moveTo(x + radius, y);
       ctx.lineTo(x + width - radius, y);
       ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
       ctx.lineTo(x + width, y + height - radius);
-      ctx.quadraticCurveTo(
-        x + width,
-        y + height,
-        x + width - radius,
-        y + height,
-      );
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
       ctx.lineTo(x + radius, y + height);
       ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
       ctx.lineTo(x, y + radius);
@@ -182,37 +137,23 @@ export default function SafeZoneCanvas() {
     };
 
     if (platform === "youtube") {
-      // ==========================================
-      // YOUTUBE THUMBNAIL HIGH-FIDELITY OVERLAYS
-      // ==========================================
-
-      // Dynamic Timestamp Pill (Bottom Right)
       const timeStr = "12:34";
       ctx.font = "bold 24px sans-serif";
       const textWidth = ctx.measureText(timeStr).width;
-
-      const pillW = textWidth + 24; // Padding
+      const pillW = textWidth + 24;
       const pillH = 44;
       const pillX = w - pillW - 16;
       const pillY = h - pillH - 16;
-
-      // Draw standard semi-transparent dark YouTube pill
-      drawRoundRect(pillX, pillY, pillW, pillH, 6, "rgba(0, 0, 0, 0.85)");
-
+      drawRoundRect(pillX, pillY, pillW, pillH, 6, "rgba(0,0,0,0.85)");
       ctx.fillStyle = "#ffffff";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(timeStr, pillX + pillW / 2, pillY + pillH / 2 + 1);
-    } else if (platform === "tiktok") {
-      // ==========================================
-      // TIKTOK INTERACTIVE OVERLAYS (9:16)
-      // ==========================================
 
-      // 1. Top Header: "Following | For You"
+    } else if (platform === "tiktok") {
       ctx.textAlign = "center";
       ctx.textBaseline = "top";
 
-      // Soft background gradient gradient for header text readability
       const topGrad = ctx.createLinearGradient(0, 0, 0, 200);
       topGrad.addColorStop(0, "rgba(0,0,0,0.4)");
       topGrad.addColorStop(1, "rgba(0,0,0,0)");
@@ -220,152 +161,78 @@ export default function SafeZoneCanvas() {
       ctx.fillRect(0, 0, w, 200);
 
       ctx.font = "bold 36px sans-serif";
-      ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+      ctx.fillStyle = "rgba(255,255,255,0.6)";
       ctx.fillText("Following", w / 2 - 110, 60);
       ctx.fillStyle = "#ffffff";
-      ctx.fillText("For You", w / 2 + 110, 60);
+      ctx.fillText("For You", w / 2 + 90, 60);
+      ctx.fillRect(w / 2 + 60, 100, 80, 3);
 
-      // Small active underline bar for "For You"
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(w / 2 + 50, 115, 120, 5);
-
-      // 2. Right Sidebar: Creator Engagement Stack
-      const centerX = w - 80; // Core axis line for icons
-
-      // Profile Avatar Circle
-      ctx.beginPath();
-      ctx.arc(centerX, 600, 50, 0, Math.PI * 2);
-      ctx.fillStyle = "#ffffff";
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(centerX, 600, 47, 0, Math.PI * 2);
-      ctx.fillStyle = "#2f2f2f";
-      ctx.fill();
-      // Little pink "+" follow badge
-      ctx.beginPath();
-      ctx.arc(centerX, 645, 16, 0, Math.PI * 2);
-      ctx.fillStyle = "#fe2c55";
-      ctx.fill();
-
-      // Action Icons (Heart, Comment, Bookmark, Share)
-      const drawActionIcon = (yCoord: number, label: string) => {
-        // Draw standard representation circles for icons
+      const iconX = w - 72;
+      const drawTikTokIcon = (y: number) => {
         ctx.beginPath();
-        ctx.arc(centerX, yCoord, 40, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+        ctx.arc(iconX, y, 34, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.15)";
         ctx.fill();
-
-        // Text sub-metrics
-        ctx.font = "bold 22px sans-serif";
-        ctx.fillStyle = "#ffffff";
-        ctx.textAlign = "center";
-        ctx.fillText(label, centerX, yCoord + 65);
       };
+      [780, 900, 1020, 1140, 1260, 1380].forEach(drawTikTokIcon);
 
-      drawActionIcon(750, "94.2K"); // Heart / Like
-      drawActionIcon(890, "1,240"); // Comment bubble
-      drawActionIcon(1030, "12.5K"); // Bookmark / Favorite
-      drawActionIcon(1170, "Share"); // Share Arrow
-
-      // Rotating Audio Vinyl Disc (Bottom Right)
-      ctx.beginPath();
-      ctx.arc(centerX, 1330, 45, 0, Math.PI * 2);
-      ctx.fillStyle = "#111111";
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(centerX, 1330, 15, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(255,255,255,0.3)";
-      ctx.fill();
-
-      // 3. Bottom Text Overlays: Metadata & Captions
-      const bottomGrad = ctx.createLinearGradient(0, h - 400, 0, h);
-      bottomGrad.addColorStop(0, "rgba(0,0,0,0)");
-      bottomGrad.addColorStop(1, "rgba(0,0,0,0.6)");
-      ctx.fillStyle = bottomGrad;
-      ctx.fillRect(0, h - 400, w, 400);
+      const botGrad = ctx.createLinearGradient(0, h - 520, 0, h);
+      botGrad.addColorStop(0, "rgba(0,0,0,0)");
+      botGrad.addColorStop(1, "rgba(0,0,0,0.65)");
+      ctx.fillStyle = botGrad;
+      ctx.fillRect(0, h - 520, w, 520);
 
       ctx.textAlign = "left";
+      ctx.textBaseline = "alphabetic";
       ctx.fillStyle = "#ffffff";
-
-      ctx.font = "bold 32px sans-serif";
-      ctx.fillText("@creator_handle", 50, h - 300);
-
-      ctx.font = "30px sans-serif";
-      ctx.fillStyle = "#f1f1f1";
-      ctx.fillText(
-        "This is an example description text showing how captions",
-        50,
-        h - 240,
-      );
-      ctx.fillText(
-        "wrap dynamically over your media asset... #shorts #mcu",
-        50,
-        h - 190,
-      );
-
-      // Audio track marker
+      ctx.font = "bold 30px sans-serif";
+      ctx.fillText("@creator_handle", 50, h - 420);
+      ctx.font = "26px sans-serif";
+      ctx.fillStyle = "rgba(255,255,255,0.9)";
+      ctx.fillText("Your caption text wraps here... #fyp #viral", 50, h - 370);
       ctx.font = "26px sans-serif";
       ctx.fillStyle = "#a8a29e";
-      ctx.fillText("🎵 Original Sound - @creator_handle", 50, h - 110);
-    } else if (platform === "reels") {
-      // ==========================================
-      // INSTAGRAM REELS OVERLAYS (9:16)
-      // ==========================================
-      const centerX = w - 80;
+      ctx.fillText("🎵 Original Sound - @creator_handle", 50, h - 260);
 
-      // Bottom/Right Gradient block for text legibility
-      ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
-      // Sidebar Icons (Instagram Style)
+    } else if (platform === "reels") {
+      const centerX = w - 80;
       const drawReelsIcon = (yCoord: number) => {
         ctx.beginPath();
         ctx.arc(centerX, yCoord, 32, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+        ctx.fillStyle = "rgba(255,255,255,0.1)";
         ctx.fill();
       };
+      [900, 1010, 1120, 1230].forEach(drawReelsIcon);
 
-      drawReelsIcon(900); // Like
-      drawReelsIcon(1010); // Comment
-      drawReelsIcon(1120); // DM / Paper Plane
-      drawReelsIcon(1230); // Context menu (...)
-
-      // Bottom User Details
       ctx.textAlign = "left";
+      ctx.textBaseline = "alphabetic";
       ctx.fillStyle = "#ffffff";
       ctx.font = "bold 28px sans-serif";
       ctx.fillText("instagram_user", 50, h - 200);
-
       ctx.font = "26px sans-serif";
-      ctx.fillText("Checking out alignment margins for reels! 🚀", 50, h - 150);
-    } else if (platform === "shorts") {
-      // ==========================================
-      // YOUTUBE SHORTS OVERLAYS (9:16)
-      // ==========================================
-      const centerX = w - 80;
+      ctx.fillText("Checking alignment margins for reels! 🚀", 50, h - 150);
 
-      // 1. Right Sidebar: Action Bar (Like, Dislike, Comments, Share, Remix)
+    } else if (platform === "shorts") {
+      const centerX = w - 80;
       const drawShortsIcon = (yCoord: number, label: string) => {
         ctx.beginPath();
         ctx.arc(centerX, yCoord, 38, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+        ctx.fillStyle = "rgba(0,0,0,0.5)";
         ctx.fill();
-
         ctx.font = "bold 20px sans-serif";
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
         ctx.fillText(label, centerX, yCoord + 65);
       };
-
       drawShortsIcon(850, "Likes");
       drawShortsIcon(980, "Dislike");
       drawShortsIcon(1110, "1,405");
       drawShortsIcon(1240, "Share");
       drawShortsIcon(1370, "Remix");
 
-      // Profile Audio Square (Bottom Right)
       drawRoundRect(centerX - 30, 1460, 60, 60, 8, "#1e293b");
 
-      // 2. Bottom Context Area: Channel Details, Caption & Subscribe Trigger
-      // Dark transparent lower screen gradient block for readability
       const bottomGrad = ctx.createLinearGradient(0, h - 450, 0, h);
       bottomGrad.addColorStop(0, "rgba(0,0,0,0)");
       bottomGrad.addColorStop(1, "rgba(0,0,0,0.6)");
@@ -373,40 +240,28 @@ export default function SafeZoneCanvas() {
       ctx.fillRect(0, h - 450, w, 450);
 
       ctx.textAlign = "left";
+      ctx.textBaseline = "alphabetic";
       ctx.fillStyle = "#ffffff";
-
-      // Channel Name Handle
       ctx.font = "bold 30px sans-serif";
       ctx.fillText("@channel_handle", 50, h - 320);
 
-      // Distinctive YouTube Shorts Red "Subscribe" Button Pill
       const subBtnWidth = 160;
       const subBtnHeight = 46;
       drawRoundRect(340, h - 350, subBtnWidth, subBtnHeight, 23, "#cc0000");
       ctx.font = "bold 20px sans-serif";
       ctx.fillStyle = "#ffffff";
       ctx.textAlign = "center";
-      ctx.fillText(
-        "Subscribe",
-        340 + subBtnWidth / 2,
-        h - 350 + subBtnHeight / 2 + 1,
-      );
+      ctx.textBaseline = "middle";
+      ctx.fillText("Subscribe", 340 + subBtnWidth / 2, h - 350 + subBtnHeight / 2 + 1);
 
-      // Caption Description Text block
       ctx.textAlign = "left";
+      ctx.textBaseline = "alphabetic";
       ctx.fillStyle = "#ffffff";
       ctx.font = "28px sans-serif";
-      ctx.fillText(
-        "Testing text alignment metrics for YouTube Shorts framework!",
-        50,
-        h - 250,
-      );
-      ctx.fillStyle = "#38bdf8"; // Light Blue sky accent for hashtags
+      ctx.fillText("Testing text alignment for YouTube Shorts!", 50, h - 250);
+      ctx.fillStyle = "#38bdf8";
       ctx.fillText("#shorts #buildinpublic #indiehackers", 50, h - 200);
-
-      // Associated Pivot Sound Banner (Bottom Left)
-      ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
-      drawRoundRect(50, h - 140, 420, 50, 6, "rgba(255, 255, 255, 0.15)");
+      drawRoundRect(50, h - 140, 420, 50, 6, "rgba(255,255,255,0.15)");
       ctx.font = "24px sans-serif";
       ctx.fillStyle = "#ffffff";
       ctx.fillText("🎵 Original Sound - @channel_handle", 70, h - 105);
@@ -415,42 +270,39 @@ export default function SafeZoneCanvas() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      {/* ── Sidebar ── */}
       <div className="lg:col-span-1 flex flex-col gap-6">
+
         <div>
-          <h3 className="font-semibold text-slate-700 mb-3">
-            1. Select Platform
-          </h3>
+          <h3 className="font-semibold text-slate-300 mb-3">1. Select Platform</h3>
           <div className="flex flex-col gap-2">
-            {(["tiktok", "youtube", "shorts", "reels"] as Platform[]).map(
-              (platform) => (
-                <button
-                  key={platform}
-                  onClick={() => setActivePlatform(platform)}
-                  className={`px-4 py-2 text-left rounded-lg font-medium capitalize transition-all ${
-                    activePlatform === platform
-                      ? "bg-blue-600 text-white shadow-md"
-                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                  }`}
-                >
-                  {platform === "youtube"
-                    ? "YouTube Thumbnail"
-                    : platform === "shorts"
-                      ? "YouTube Shorts"
-                      : platform}
-                </button>
-              ),
-            )}
+            {(["tiktok", "youtube", "shorts", "reels"] as Platform[]).map((platform) => (
+              <button
+                key={platform}
+                onClick={() => setActivePlatform(platform)}
+                className={`px-4 py-2 text-left rounded-lg font-medium capitalize transition-all ${
+                  activePlatform === platform
+                    ? "bg-blue-600 text-white shadow-md"
+                    : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                }`}
+              >
+                {platform === "youtube"
+                  ? "YouTube Thumbnail"
+                  : platform === "shorts"
+                  ? "YouTube Shorts"
+                  : platform}
+              </button>
+            ))}
           </div>
         </div>
 
         <div>
-          <h3 className="font-semibold text-slate-700 mb-2">2. Upload Asset</h3>
+          <h3 className="font-semibold text-slate-300 mb-2">2. Upload Asset</h3>
           {!imageSrc ? (
-            // Show this upload trigger if no image is loaded
-            <label className="block w-full text-center px-4 py-3 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg font-semibold text-sm cursor-pointer transition-colors border border-blue-200">
+            <label className="block w-full text-center px-4 py-3 bg-blue-950 hover:bg-blue-900 text-blue-300 rounded-lg font-semibold text-sm cursor-pointer transition-colors border border-blue-800">
               Choose Image File
               <input
-                ref={fileInputRef} // 👈 Attach the ref here
+                ref={fileInputRef}
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
@@ -458,28 +310,26 @@ export default function SafeZoneCanvas() {
               />
             </label>
           ) : (
-            // Show the Clear action button if an image is actively loaded
             <button
               onClick={handleClearImage}
-              className="w-full text-center px-4 py-3 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg font-semibold text-sm cursor-pointer transition-colors border border-rose-200"
+              className="w-full text-center px-4 py-3 bg-rose-950 hover:bg-rose-900 text-rose-300 rounded-lg font-semibold text-sm cursor-pointer transition-colors border border-rose-800"
             >
               Clear Image
             </button>
           )}
         </div>
+
         {imageSrc && (
-          <div className="border-t border-slate-100 pt-4 mt-2">
-            <h3 className="font-semibold text-slate-700 mb-3">
-              3. Preferences
-            </h3>
+          <div className="border-t border-slate-700 pt-4 mt-2">
+            <h3 className="font-semibold text-slate-300 mb-3">3. Preferences</h3>
             <label className="flex items-center gap-3 cursor-pointer select-none group">
               <input
                 type="checkbox"
                 checked={showGridOnly}
                 onChange={(e) => setShowGridOnly(e.target.checked)}
-                className="w-5 h-5 accent-blue-600 rounded cursor-pointer"
+                className="w-5 h-5 accent-blue-500 rounded cursor-pointer"
               />
-              <span className="text-sm font-medium text-slate-600 group-hover:text-slate-900 transition-colors">
+              <span className="text-sm font-medium text-slate-400 group-hover:text-white transition-colors">
                 Show Safe-Zone Grid Only
               </span>
             </label>
@@ -487,32 +337,32 @@ export default function SafeZoneCanvas() {
         )}
       </div>
 
-      {/* Main Preview Board Canvas */}
+      {/* ── Drop Zone ── */}
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        className={`lg:col-span-3 flex justify-center items-center rounded-xl p-4 min-h-137.5 border-2 border-dashed transition-colors ${
+        className={`lg:col-span-3 flex justify-center items-center rounded-xl p-4 min-h-[550px] border-2 border-dashed transition-colors ${
           isDragging
-            ? "border-blue-500 bg-blue-50/50"
-            : "border-slate-200 bg-slate-50"
+            ? "border-blue-500 bg-blue-950/30"
+            : "border-slate-600 bg-slate-900"
         }`}
       >
         {imageSrc ? (
-          <div className="relative shadow-xl max-h-150 overflow-auto bg-slate-900 rounded-lg p-2">
+          <div className="relative shadow-xl max-h-[600px] overflow-auto bg-slate-950 rounded-lg p-2">
             <canvas
               ref={canvasRef}
-              className={`max-h-135 w-auto h-auto object-contain mx-auto block ${
-                activePlatform === "youtube" ? "aspect-video" : "aspect-9/16"
+              className={`max-h-[540px] w-auto h-auto object-contain mx-auto block ${
+                activePlatform === "youtube" ? "aspect-video" : "aspect-[9/16]"
               }`}
             />
           </div>
         ) : (
-          <div className="text-center text-slate-400 select-none pointer-events-none">
-            <p className="text-base font-semibold text-slate-600">
-              Drag & drop your image here
+          <div className="text-center select-none pointer-events-none">
+            <p className="text-base font-semibold text-slate-300">
+              Drag &amp; drop your image here
             </p>
-            <p className="text-xs mt-1">Supports PNG, JPG, and WebP assets</p>
+            <p className="text-xs mt-1 text-slate-500">Supports PNG, JPG, and WebP assets</p>
           </div>
         )}
       </div>
