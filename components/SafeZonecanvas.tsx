@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 
-type Platform = "youtube" | "tiktok" | "reels";
+type Platform = "youtube" | "tiktok" | "reels" | "shorts";
 
 export default function SafeZoneCanvas() {
   const [activePlatform, setActivePlatform] = useState<Platform>("tiktok");
@@ -119,7 +119,7 @@ export default function SafeZoneCanvas() {
       ctx.strokeStyle = "rgba(239, 68, 68, 0.8)"; // Clean red line border
       ctx.lineWidth = 4;
       ctx.setLineDash([15, 10]); // Creates a dashed pattern [dash length, gap length]
-      
+
       if (platform === "youtube") {
         // Just highlight the bottom-right timestamp bounding area
         ctx.strokeRect(w - 184 - 16, h - 44 - 16, 184, 44);
@@ -127,7 +127,7 @@ export default function SafeZoneCanvas() {
         // TikTok / Reels standard layout boundary guides
         const topMargin = 160;
         const rightMargin = 140;
-        const bottomMargin = platform === "tiktok" ? 480 : 380;
+        const bottomMargin = platform === "tiktok" ? 480 : platform === "shorts" ? 420 : 380;
 
         // Draw top header boundary
         ctx.beginPath();
@@ -336,6 +336,80 @@ export default function SafeZoneCanvas() {
 
       ctx.font = "26px sans-serif";
       ctx.fillText("Checking out alignment margins for reels! 🚀", 50, h - 150);
+    } else if (platform === "shorts") {
+      // ==========================================
+      // YOUTUBE SHORTS OVERLAYS (9:16)
+      // ==========================================
+      const centerX = w - 80;
+
+      // 1. Right Sidebar: Action Bar (Like, Dislike, Comments, Share, Remix)
+      const drawShortsIcon = (yCoord: number, label: string) => {
+        ctx.beginPath();
+        ctx.arc(centerX, yCoord, 38, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+        ctx.fill();
+
+        ctx.font = "bold 20px sans-serif";
+        ctx.fillStyle = "#ffffff";
+        ctx.textAlign = "center";
+        ctx.fillText(label, centerX, yCoord + 65);
+      };
+
+      drawShortsIcon(850, "Likes");
+      drawShortsIcon(980, "Dislike");
+      drawShortsIcon(1110, "1,405");
+      drawShortsIcon(1240, "Share");
+      drawShortsIcon(1370, "Remix");
+
+      // Profile Audio Square (Bottom Right)
+      drawRoundRect(centerX - 30, 1460, 60, 60, 8, "#1e293b");
+
+      // 2. Bottom Context Area: Channel Details, Caption & Subscribe Trigger
+      // Dark transparent lower screen gradient block for readability
+      const bottomGrad = ctx.createLinearGradient(0, h - 450, 0, h);
+      bottomGrad.addColorStop(0, "rgba(0,0,0,0)");
+      bottomGrad.addColorStop(1, "rgba(0,0,0,0.6)");
+      ctx.fillStyle = bottomGrad;
+      ctx.fillRect(0, h - 450, w, 450);
+
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#ffffff";
+
+      // Channel Name Handle
+      ctx.font = "bold 30px sans-serif";
+      ctx.fillText("@channel_handle", 50, h - 320);
+
+      // Distinctive YouTube Shorts Red "Subscribe" Button Pill
+      const subBtnWidth = 160;
+      const subBtnHeight = 46;
+      drawRoundRect(340, h - 350, subBtnWidth, subBtnHeight, 23, "#cc0000");
+      ctx.font = "bold 20px sans-serif";
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
+      ctx.fillText(
+        "Subscribe",
+        340 + subBtnWidth / 2,
+        h - 350 + subBtnHeight / 2 + 1,
+      );
+
+      // Caption Description Text block
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "28px sans-serif";
+      ctx.fillText(
+        "Testing text alignment metrics for YouTube Shorts framework!",
+        50,
+        h - 250,
+      );
+      ctx.fillStyle = "#38bdf8"; // Light Blue sky accent for hashtags
+      ctx.fillText("#shorts #buildinpublic #indiehackers", 50, h - 200);
+
+      // Associated Pivot Sound Banner (Bottom Left)
+      ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+      drawRoundRect(50, h - 140, 420, 50, 6, "rgba(255, 255, 255, 0.15)");
+      ctx.font = "24px sans-serif";
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText("🎵 Original Sound - @channel_handle", 70, h - 105);
     }
   };
 
@@ -347,19 +421,25 @@ export default function SafeZoneCanvas() {
             1. Select Platform
           </h3>
           <div className="flex flex-col gap-2">
-            {(["tiktok", "youtube", "reels"] as Platform[]).map((platform) => (
-              <button
-                key={platform}
-                onClick={() => setActivePlatform(platform)}
-                className={`px-4 py-2 text-left rounded-lg font-medium capitalize transition-all ${
-                  activePlatform === platform
-                    ? "bg-blue-600 text-white shadow-md"
-                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                }`}
-              >
-                {platform === "youtube" ? "YouTube Thumbnail" : platform}
-              </button>
-            ))}
+            {(["tiktok", "youtube", "shorts", "reels"] as Platform[]).map(
+              (platform) => (
+                <button
+                  key={platform}
+                  onClick={() => setActivePlatform(platform)}
+                  className={`px-4 py-2 text-left rounded-lg font-medium capitalize transition-all ${
+                    activePlatform === platform
+                      ? "bg-blue-600 text-white shadow-md"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  }`}
+                >
+                  {platform === "youtube"
+                    ? "YouTube Thumbnail"
+                    : platform === "shorts"
+                      ? "YouTube Shorts"
+                      : platform}
+                </button>
+              ),
+            )}
           </div>
         </div>
 
@@ -389,7 +469,9 @@ export default function SafeZoneCanvas() {
         </div>
         {imageSrc && (
           <div className="border-t border-slate-100 pt-4 mt-2">
-            <h3 className="font-semibold text-slate-700 mb-3">3. Preferences</h3>
+            <h3 className="font-semibold text-slate-700 mb-3">
+              3. Preferences
+            </h3>
             <label className="flex items-center gap-3 cursor-pointer select-none group">
               <input
                 type="checkbox"
