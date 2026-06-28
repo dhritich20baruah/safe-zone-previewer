@@ -13,10 +13,10 @@ export default function Navbar() {
 
         <div className="flex items-center gap-1 sm:gap-2">
           {[
-            { href: "/about", label: "About" },
-            { href: "/contact", label: "Contact" },
-            { href: "/privacy-policy", label: "Privacy" },
-            { href: "/terms", label: "Terms" },
+            { href: "/About", label: "About" },
+            { href: "/Contact", label: "Contact" },
+            { href: "/Privacy-policy", label: "Privacy" },
+            { href: "/Terms", label: "Terms" },
           ].map(({ href, label }) => (
             <Link
               key={href}
