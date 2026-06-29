@@ -25,9 +25,11 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: "Safe Zone Preview – TikTok, Instagram Reels, IG Stories & YouTube Shorts",
-    description:
-      "Preview your TikTok safe zone, Instagram Reels safe zone, IG Story safe zone, and YouTube Shorts safe zone in seconds. Upload your design and check which areas are hidden by native UI overlays.",
+    description: "Preview your TikTok safe zone, Instagram Reels safe zone, IG Story safe zone, and YouTube Shorts safe zone in seconds. Upload your design and check which areas are hidden by native UI overlays.",
     type: "website",
+    url: "https://safezonepreview.com",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Safe Zone Preview Tool" }],
+
   },
   twitter: {
     card: "summary_large_image",
@@ -37,7 +39,7 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "/",
-  },
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
