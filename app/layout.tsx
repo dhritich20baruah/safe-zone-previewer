@@ -29,7 +29,6 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://safezonepreview.com",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Safe Zone Preview Tool" }],
-
   },
   twitter: {
     card: "summary_large_image",

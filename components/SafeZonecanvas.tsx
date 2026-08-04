@@ -4,8 +4,13 @@ import { useState, useRef, useEffect } from "react";
 
 type Platform = "youtube" | "tiktok" | "reels" | "shorts";
 
-export default function SafeZoneCanvas() {
-  const [activePlatform, setActivePlatform] = useState<Platform>("tiktok");
+type Props = {
+  defaultPlatform?: Platform;
+  locked?: boolean;
+};
+
+export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = false }: Props) {
+  const [activePlatform, setActivePlatform] = useState<Platform>(defaultPlatform);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [showGridOnly, setShowGridOnly] = useState(false);
@@ -268,36 +273,54 @@ export default function SafeZoneCanvas() {
     }
   };
 
+  const platformLabel: Record<Platform, string> = {
+    tiktok: "TikTok",
+    reels: "Instagram Reels",
+    shorts: "YouTube Shorts",
+    youtube: "YouTube Thumbnail",
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
       {/* ── Sidebar ── */}
       <div className="lg:col-span-1 flex flex-col gap-6">
 
-        <div>
-          <h3 className="font-semibold text-slate-300 mb-3">1. Select Platform</h3>
-          <div className="flex flex-col gap-2">
-            {(["tiktok", "youtube", "shorts", "reels"] as Platform[]).map((platform) => (
-              <button
-                key={platform}
-                onClick={() => setActivePlatform(platform)}
-                className={`px-4 py-2 text-left rounded-lg font-medium capitalize transition-all ${
-                  activePlatform === platform
-                    ? "bg-blue-600 text-white shadow-md"
-                    : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-                }`}
-              >
-                {platform === "youtube"
-                  ? "YouTube Thumbnail"
-                  : platform === "shorts"
-                  ? "YouTube Shorts"
-                  : platform}
-              </button>
-            ))}
+        {/* Platform selector — hidden when locked */}
+        {!locked && (
+          <div>
+            <h3 className="font-semibold text-slate-300 mb-3">1. Select Platform</h3>
+            <div className="flex flex-col gap-2">
+              {(["tiktok", "youtube", "shorts", "reels"] as Platform[]).map((platform) => (
+                <button
+                  key={platform}
+                  onClick={() => setActivePlatform(platform)}
+                  className={`px-4 py-2 text-left rounded-lg font-medium capitalize transition-all ${
+                    activePlatform === platform
+                      ? "bg-blue-600 text-white shadow-md"
+                      : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                  }`}
+                >
+                  {platformLabel[platform]}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* When locked, show a static platform badge */}
+        {locked && (
+          <div>
+            <h3 className="font-semibold text-slate-300 mb-3">Platform</h3>
+            <div className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm">
+              {platformLabel[activePlatform]}
+            </div>
+          </div>
+        )}
 
         <div>
-          <h3 className="font-semibold text-slate-300 mb-2">2. Upload Asset</h3>
+          <h3 className="font-semibold text-slate-300 mb-2">
+            {locked ? "2. Upload Asset" : "2. Upload Asset"}
+          </h3>
           {!imageSrc ? (
             <label className="block w-full text-center px-4 py-3 bg-blue-950 hover:bg-blue-900 text-blue-300 rounded-lg font-semibold text-sm cursor-pointer transition-colors border border-blue-800">
               Choose Image File

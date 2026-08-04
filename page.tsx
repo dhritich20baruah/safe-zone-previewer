@@ -61,18 +61,6 @@ export default function Home() {
               ),
             },
             {
-              title: "Instagram Story Safe Zone",
-              href: "/instagram-story-safe-zone",
-              body: (
-                <>
-                  Instagram Stories overlay a progress bar at the top and a reply box at
-                  the bottom. Preview the{" "}
-                  <strong className="text-slate-200">IG Story safe zone</strong> to make
-                  sure your text and graphics stay visible on every device.
-                </>
-              ),
-            },
-            {
               title: "YouTube Shorts Safe Zone",
               href: "/youtube-shorts-safe-zone",
               body: (
