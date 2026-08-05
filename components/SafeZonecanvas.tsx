@@ -14,6 +14,7 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [showGridOnly, setShowGridOnly] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -47,6 +48,33 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
     if (imageSrc) URL.revokeObjectURL(imageSrc);
     setImageSrc(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  // ── Download handler ──
+  const handleDownload = () => {
+    if (!canvasRef.current) return;
+    setIsDownloading(true);
+
+    try {
+      const canvas = canvasRef.current;
+      const dataURL = canvas.toDataURL("image/png");
+
+      const platformLabels: Record<Platform, string> = {
+        tiktok: "tiktok",
+        reels: "instagram-reels",
+        shorts: "youtube-shorts",
+        youtube: "youtube-thumbnail",
+      };
+
+      const filename = `safezonepreview-${platformLabels[activePlatform]}.png`;
+
+      const link = document.createElement("a");
+      link.href = dataURL;
+      link.download = filename;
+      link.click();
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   useEffect(() => {
@@ -285,8 +313,8 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
       {/* ── Sidebar ── */}
       <div className="lg:col-span-1 flex flex-col gap-6">
 
-        {/* Platform selector — hidden when locked */}
-        {!locked && (
+        {/* Platform selector */}
+        {!locked ? (
           <div>
             <h3 className="font-semibold text-slate-300 mb-3">1. Select Platform</h3>
             <div className="flex flex-col gap-2">
@@ -294,7 +322,7 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
                 <button
                   key={platform}
                   onClick={() => setActivePlatform(platform)}
-                  className={`px-4 py-2 text-left rounded-lg font-medium capitalize transition-all ${
+                  className={`px-4 py-2 text-left rounded-lg font-medium transition-all ${
                     activePlatform === platform
                       ? "bg-blue-600 text-white shadow-md"
                       : "bg-slate-700 text-slate-300 hover:bg-slate-600"
@@ -305,10 +333,7 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
               ))}
             </div>
           </div>
-        )}
-
-        {/* When locked, show a static platform badge */}
-        {locked && (
+        ) : (
           <div>
             <h3 className="font-semibold text-slate-300 mb-3">Platform</h3>
             <div className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm">
@@ -317,6 +342,7 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
           </div>
         )}
 
+        {/* Upload / Clear */}
         <div>
           <h3 className="font-semibold text-slate-300 mb-2">
             {locked ? "2. Upload Asset" : "2. Upload Asset"}
@@ -342,20 +368,53 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
           )}
         </div>
 
+        {/* Preferences + Download — only shown when image is loaded */}
         {imageSrc && (
-          <div className="border-t border-slate-700 pt-4 mt-2">
-            <h3 className="font-semibold text-slate-300 mb-3">3. Preferences</h3>
-            <label className="flex items-center gap-3 cursor-pointer select-none group">
-              <input
-                type="checkbox"
-                checked={showGridOnly}
-                onChange={(e) => setShowGridOnly(e.target.checked)}
-                className="w-5 h-5 accent-blue-500 rounded cursor-pointer"
-              />
-              <span className="text-sm font-medium text-slate-400 group-hover:text-white transition-colors">
-                Show Safe-Zone Grid Only
-              </span>
-            </label>
+          <div className="border-t border-slate-700 pt-4 mt-2 flex flex-col gap-4">
+            <div>
+              <h3 className="font-semibold text-slate-300 mb-3">3. Preferences</h3>
+              <label className="flex items-center gap-3 cursor-pointer select-none group">
+                <input
+                  type="checkbox"
+                  checked={showGridOnly}
+                  onChange={(e) => setShowGridOnly(e.target.checked)}
+                  className="w-5 h-5 accent-blue-500 rounded cursor-pointer"
+                />
+                <span className="text-sm font-medium text-slate-400 group-hover:text-white transition-colors">
+                  Show Safe-Zone Grid Only
+                </span>
+              </label>
+            </div>
+
+            {/* ── Download button ── */}
+            <div>
+              <h3 className="font-semibold text-slate-300 mb-3">4. Export</h3>
+              <button
+                onClick={handleDownload}
+                disabled={isDownloading}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-700 hover:bg-emerald-600 disabled:bg-slate-700 disabled:text-slate-500 text-white rounded-lg font-semibold text-sm transition-colors"
+              >
+                {isDownloading ? (
+                  <>
+                    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                    </svg>
+                    Downloading…
+                  </>
+                ) : (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" />
+                    </svg>
+                    Download Preview PNG
+                  </>
+                )}
+              </button>
+              <p className="text-xs text-slate-500 mt-2 text-center">
+                Full resolution · {activePlatform === "youtube" ? "1280×720" : "1080×1920"}px
+              </p>
+            </div>
           </div>
         )}
       </div>
