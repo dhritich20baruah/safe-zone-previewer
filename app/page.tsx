@@ -19,6 +19,8 @@ export default function Home() {
             Upload your design and instantly preview the{" "}
             <strong className="text-slate-200">TikTok safe zone</strong>,{" "}
             <strong className="text-slate-200">Instagram Reels safe zone</strong>,{" "}
+            <strong className="text-slate-200">Facebook Reels safe zone</strong>,{" "}
+            <strong className="text-slate-200">Pinterest safe zone</strong>,{" "}
             <strong className="text-slate-200">YouTube Shorts safe zone</strong>, and{" "}
             <strong className="text-slate-200">YouTube Thumbnail safe zone</strong> — all in one
             place. No login, no watermark, completely free.
@@ -86,13 +88,36 @@ export default function Home() {
             },
             {
               title: "YouTube Thumbnail Safe Zone",
-              href: "/",
+              href: "#",
               body: (
                 <>
                   YouTube auto-stamps a timestamp pill in the bottom-right corner of every
                   thumbnail. Preview the{" "}
                   <strong className="text-slate-200">YouTube Thumbnail safe zone</strong> to
                   ensure your title, face, or key graphic is never hidden behind it.
+                </>
+              ),
+            },
+            {
+              title: "Facebook Reels Safe Zone",
+              href: "/facebook-reels-safe-zone",
+              body: (
+                <>
+                  Facebook blocks the right side with reaction icons and the bottom with profile
+                  info and follow button. Preview the{" "}
+                  <strong className="text-slate-200">Facebook Reel safe zone</strong> before you post
+                  to make sure no critical text or logo is cut off.
+                </>
+              ),
+            },
+            {
+              title: "Pinterest Safe Zone",
+              href: "/pinterest-safe-zone",
+              body: (
+                <>
+                  Pinterest blocks the bottom with pin info and save button. Preview the{" "}
+                  <strong className="text-slate-200">Pinterest safe zone</strong> before you create new pins
+                  to make sure no critical text or logo is cut off.
                 </>
               ),
             },
@@ -152,7 +177,7 @@ export default function Home() {
               },
               {
                 q: "Which platforms does the safe zone checker support?",
-                a: "Currently supported: TikTok safe zone (9:16), Instagram Reels safe zone (9:16), YouTube Shorts safe zone (9:16), and YouTube Thumbnail safe zone (16:9).",
+                a: "Currently supported: TikTok (9:16), Instagram Reels (9:16), Instagram Stories (9:16), YouTube Shorts (9:16), YouTube Thumbnails (16:9), Facebook Reels (9:16), and Pinterest Pins (2:3 · 1000×1500px).",
               },
               {
                 q: "Can I use this to create an Instagram safe zone template?",
@@ -198,7 +223,8 @@ export default function Home() {
             right-side action stack (profile avatar, heart, comment, bookmark, and share icons) that
             runs from roughly the top third of the screen down to the audio disc near the bottom. At
             the same time, the bottom caption and hashtag area can consume up to 480 pixels of
-            vertical space on a 1080×1920 canvas.
+            vertical space on a 1080×1920 canvas. The Facebook Reels safe zone shares the 9:16 canvas but has a slightly larger bottom margin than Instagram Reels. The Pinterest safe zone is unique — it uses a 2:3 ratio (1000×1500px) with a bottom Save button
+            overlay and a top logo bar, making it the only non-vertical-video format in the tool.
           </p>
           <p className="text-slate-400">
             The <strong className="text-slate-200">Instagram Reels safe zone</strong> follows the
@@ -280,7 +306,9 @@ export default function Home() {
           </nav>
           <p className="text-xs text-slate-600 text-center">
             Supports: YouTube Thumbnails (1280×720, 16:9) · TikTok Safe Zone (1080×1920, 9:16) ·
-            Instagram Reels Safe Zone (1080×1920, 9:16) · YouTube Shorts Safe Zone (1080×1920, 9:16)
+            Instagram Reels Safe Zone (1080×1920, 9:16) · YouTube Shorts Safe Zone (1080×1920, 9:16) ·
+            Facebook Reels Safe Zone (1080×1920, 9:16) ·
+            Pinterest Safe Zone (1000×1500, 2:3)
           </p>
           <p className="text-xs text-slate-600 text-center mt-2">
             Built for creators who want to design with confidence — no guessing, no cropped text.

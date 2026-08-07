@@ -22,8 +22,9 @@ export default function AboutPage() {
             </h1>
             <p className="text-lg text-slate-400">
               A free, browser-based tool that helps content creators, designers, and social media
-              managers verify that their designs stay inside the visible area on TikTok, Instagram
-              Reels, Instagram Stories, and YouTube before publishing.
+              managers verify that their designs stay inside the visible area on TikTok,
+              Instagram Reels, Instagram Stories, YouTube, Facebook Reels, and
+              Pinterest before publishing.
             </p>
           </header>
 
@@ -54,8 +55,9 @@ export default function AboutPage() {
               </p>
               <p className="text-slate-400 mt-3">
                 The safe zone overlays are based on real device measurements at standard
-                resolutions: 1080×1920 for vertical content (TikTok, Reels, Shorts, Stories)
-                and 1280×720 for YouTube thumbnails.
+                resolutions: 1080×1920 for vertical content (TikTok, Reels, Shorts, Stories,
+                Facebook Reels), 1000×1500 for Pinterest Pins, and 1280×720 for
+                YouTube Thumbnails.
               </p>
             </section>
 
@@ -68,6 +70,8 @@ export default function AboutPage() {
                   ["Instagram Stories", "9:16 · 1080×1920 — matches Reels safe zone dimensions"],
                   ["YouTube Shorts", "9:16 · 1080×1920 — like/share sidebar, bottom channel bar"],
                   ["YouTube Thumbnails", "16:9 · 1280×720 — auto-generated timestamp pill"],
+                  ["Facebook Reels", "9:16 · 1080×1920 — reaction icons, profile info overlay"],
+                  ["Pinterest Pins", "2:3 · 1000×1500 — Pin info, save button, logo"],
                 ].map(([platform, detail]) => (
                   <li key={platform} className="flex gap-3">
                     <span className="mt-1 w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />
