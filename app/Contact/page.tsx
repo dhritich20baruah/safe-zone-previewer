@@ -28,7 +28,7 @@ export default function ContactPage() {
 
             {/* Email */}
             <a
-              href="mailto:YOUR_EMAIL@example.com"
+              href="mailto:dhriticodes20@gmail.com"
               className="group flex flex-col items-center text-center bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-blue-500 rounded-xl p-6 transition-all"
             >
               <div className="w-12 h-12 flex items-center justify-center rounded-full bg-slate-700 group-hover:bg-blue-600 transition-colors mb-4">
@@ -38,7 +38,7 @@ export default function ContactPage() {
               </div>
               <h2 className="font-bold text-white mb-1">Email</h2>
               <p className="text-sm text-blue-400 group-hover:text-blue-300 transition-colors break-all">
-                dhriticodes20@example.com
+                dhriticodes20@gmail.com
               </p>
             </a>
 
