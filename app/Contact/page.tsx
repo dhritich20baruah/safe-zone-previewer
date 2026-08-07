@@ -38,13 +38,13 @@ export default function ContactPage() {
               </div>
               <h2 className="font-bold text-white mb-1">Email</h2>
               <p className="text-sm text-blue-400 group-hover:text-blue-300 transition-colors break-all">
-                YOUR_EMAIL@example.com
+                dhriticodes20@example.com
               </p>
             </a>
 
             {/* LinkedIn */}
             <a
-              href="https://linkedin.com/in/YOUR_LINKEDIN_HANDLE"
+              href="https://www.linkedin.com/in/dhritiman-chandra-baruah-7b6681ba/"
               target="_blank"
               rel="noopener noreferrer"
               className="group flex flex-col items-center text-center bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-blue-500 rounded-xl p-6 transition-all"
@@ -56,13 +56,13 @@ export default function ContactPage() {
               </div>
               <h2 className="font-bold text-white mb-1">LinkedIn</h2>
               <p className="text-sm text-blue-400 group-hover:text-blue-300 transition-colors">
-                YOUR_LINKEDIN_HANDLE
+                linkedin.com/in/dhritiman-chandra-baruah-7b6681ba
               </p>
             </a>
 
             {/* GitHub */}
             <a
-              href="https://github.com/YOUR_GITHUB_HANDLE"
+              href="https://github.com/dhritich20baruah"
               target="_blank"
               rel="noopener noreferrer"
               className="group flex flex-col items-center text-center bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-blue-500 rounded-xl p-6 transition-all"
@@ -74,7 +74,7 @@ export default function ContactPage() {
               </div>
               <h2 className="font-bold text-white mb-1">GitHub</h2>
               <p className="text-sm text-blue-400 group-hover:text-blue-300 transition-colors">
-                YOUR_GITHUB_HANDLE
+                github.com/dhritich20baruah
               </p>
             </a>
 
