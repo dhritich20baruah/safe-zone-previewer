@@ -147,8 +147,9 @@ export default function Home() {
               Instagram Reels, YouTube Shorts, or YouTube Thumbnail from the sidebar.
             </li>
             <li>
-              <strong className="text-slate-200">Upload your design</strong> — drag &amp; drop or
-              click to upload any PNG, JPG, or WebP file.
+              <strong className="text-slate-200">Upload your design</strong> or video — drag &amp; drop or
+              click to upload any PNG, JPG,
+              WebP image or MP4, WebM, MOV video file.
             </li>
             <li>
               <strong className="text-slate-200">Check the safe zone</strong> — the canvas
@@ -177,11 +178,15 @@ export default function Home() {
               },
               {
                 q: "Which platforms does the safe zone checker support?",
-                a: "Currently supported: TikTok (9:16), Instagram Reels (9:16), Instagram Stories (9:16), YouTube Shorts (9:16), YouTube Thumbnails (16:9), Facebook Reels (9:16), and Pinterest Pins (2:3 · 1000×1500px).",
+                a: "Currently supported: TikTok (9:16), Instagram Reels (9:16), Instagram Stories (9:16),YouTube Shorts (9:16), YouTube Thumbnails (16:9), Facebook Reels (9:16), and Pinterest Pins (2:3 · 1000×1500px). Both images and videos are supported.",
               },
               {
                 q: "Can I use this to create an Instagram safe zone template?",
                 a: "Yes. Enable Safe-Zone Grid Only mode and screenshot the dashed boundary lines. Import them as a transparent overlay into Canva, Adobe Express, or Figma to create a reusable Instagram safe zone template or TikTok safe zone template.",
+              },
+              {
+                q: "Can I upload a video to check the safe zone?",
+                a: "Yes — you can upload MP4, WebM, or MOV video files in addition to images. After uploading, a frame scrubber appears so you can drag to any point in the video and check the safe zone at that exact moment. The export downloads the current frame as a full-resolution PNG.",
               },
             ].map(({ q, a }) => (
               <details
@@ -243,6 +248,15 @@ export default function Home() {
             timestamp pill in the bottom-right corner that hides content placed too close to
             that edge.
           </p>
+          <p className="text-slate-400">
+            The <strong className="text-slate-200">Facebook Reels safe zone</strong> shares
+            the same 9:16 canvas as Instagram but reserves a slightly larger bottom margin —
+            around 420px — for the page name, Follow button, and audio bar. The{" "}
+            <strong className="text-slate-200">Pinterest safe zone</strong> is unique: it
+            uses a 2:3 ratio (1000×1500px) with a red Save button overlaid in the
+            bottom-right corner, making it the only non-vertical-video format the tool
+            supports.
+          </p>
 
           <h3 className="text-xl font-bold text-white mt-8 mb-3">
             How This Safe Zone Preview Tool Works
@@ -252,7 +266,9 @@ export default function Home() {
             UI directly on top of your uploaded image. There is no guesswork — the overlay positions
             are based on real device measurements at 1080×1920 for vertical content and 1280×720 for
             YouTube thumbnails. You upload your design, select your platform, and see in under a
-            second whether any critical element falls inside a hidden zone.
+            second whether any critical element falls inside a hidden zone. You can also upload a video directly — a frame scrubber lets you
+            seek to any moment in the clip and check the safe zone at that
+            exact frame before publishing.
           </p>
           <p className="text-slate-400">
             For creators who want a reusable workflow, the <em>Safe-Zone Grid Only</em> mode strips
