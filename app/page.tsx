@@ -123,7 +123,7 @@ export default function Home() {
                 </>
               ),
             },
-             {
+            {
               title: "LinkedIn Safe Zone",
               href: "/linkedin-safe-zone",
               body: (
@@ -134,13 +134,13 @@ export default function Home() {
                 </>
               ),
             },
-             {
+            {
               title: "Snapchat Safe Zone",
               href: "/snapchat-safe-zone",
               body: (
                 <>
                   In Snapchat there is ghost emoji logo at centre-top, countdown timer top-right, right-side icon stack blocks the right side, bottom gradient with username, yellow Subscribe button, caption, and the 4-icon bottom navigation bar blocks the bottom. The bottom nav bar is unique to Snapchat — no other platform in the tool has a persistent tab bar like this. Preview the{" "}
-                  <strong className="text-slate-200">snapchat safe zone</strong> 
+                  <strong className="text-slate-200">snapchat safe zone</strong>
                   to make sure no critical text or logo is cut off.
                 </>
               ),
@@ -202,7 +202,7 @@ export default function Home() {
               },
               {
                 q: "Which platforms does the safe zone checker support?",
-                a: "Currently supported: TikTok (9:16), Instagram Reels (9:16), Instagram Stories (9:16),YouTube Shorts (9:16), YouTube Thumbnails (16:9), Facebook Reels (9:16), and Pinterest Pins (2:3 · 1000×1500px). Both images and videos are supported.",
+                a: "Currently supported: TikTok (9:16), Instagram Reels (9:16), Instagram Stories (9:16), YouTube Shorts (9:16), YouTube Thumbnails(16:9), Facebook Reels (9:16), Pinterest Pins (2:3 · 1000×1500px), LinkedIn Video (9:16), and Snapchat Spotlight (9:16). Both images and videos are supported.",
               },
               {
                 q: "Can I use this to create an Instagram safe zone template?",
@@ -211,6 +211,10 @@ export default function Home() {
               {
                 q: "Can I upload a video to check the safe zone?",
                 a: "Yes — you can upload MP4, WebM, or MOV video files in addition to images. After uploading, a frame scrubber appears so you can drag to any point in the video and check the safe zone at that exact moment. The export downloads the current frame as a full-resolution PNG.",
+              },
+              {
+                q: "Is my uploaded image or video kept private?",
+                a: "Yes — completely. All processing happens entirely in your browser using the HTML Canvas API. Your images and videos are never uploaded to any server, never stored, and never seen by anyone. When you clear your file or close the tab, the data is released from memory immediately. There is no account, no tracking, and no data collection of any kind.",
               },
             ].map(({ q, a }) => (
               <details
