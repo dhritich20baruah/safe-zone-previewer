@@ -51,28 +51,42 @@
   </url>
 
   <url>
-    <loc>https://safezonepreview.com/About</loc>
+    <loc>https://safezonepreview.com/linkedin-safe-zone</loc>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://safezonepreview.com/snapchat-safe-zone</loc>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://safezonepreview.com/about</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
-    <loc>https://safezonepreview.com/Contact</loc>
+    <loc>https://safezonepreview.com/contact</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
 
   <url>
-    <loc>https://safezonepreview.com/Privacy-policy</loc>
+    <loc>https://safezonepreview.com/privacy-policy</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
 
   <url>
-    <loc>https://safezonepreview.com/Terms</loc>
+    <loc>https://safezonepreview.com/terms</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>

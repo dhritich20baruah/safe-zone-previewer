@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 
-type Platform = "youtube" | "tiktok" | "reels" | "shorts" | "pinterest" | "facebook";
+type Platform = "youtube" | "tiktok" | "reels" | "shorts" | "pinterest" | "facebook" | "linkedin" | "snapchat";
 type FrameStyle = "none" | "iphone" | "android";
 type AssetType = "image" | "video";
 
@@ -11,47 +11,51 @@ type Props = {
   locked?: boolean;
 };
 
-const VERTICAL_PLATFORMS: Platform[] = ["tiktok", "reels", "shorts", "facebook", "pinterest"];
+const VERTICAL_PLATFORMS: Platform[] = ["tiktok", "reels", "shorts", "facebook", "pinterest", "snapchat", "linkedin"];
 
 const platformLabel: Record<Platform, string> = {
-  tiktok: "TikTok",
-  reels: "Instagram Reels",
-  shorts: "YouTube Shorts",
-  youtube: "YouTube Thumbnail",
+  tiktok:    "TikTok",
+  reels:     "Instagram Reels",
+  shorts:    "YouTube Shorts",
+  youtube:   "YouTube Thumbnail",
   pinterest: "Pinterest",
-  facebook: "Facebook Reels",
+  facebook:  "Facebook Reels",
+  linkedin:  "LinkedIn Video",
+  snapchat:  "Snapchat Spotlight",
 };
 
 const platformDimensions: Record<Platform, { w: number; h: number }> = {
-  tiktok: { w: 1080, h: 1920 },
-  reels: { w: 1080, h: 1920 },
-  shorts: { w: 1080, h: 1920 },
-  facebook: { w: 1080, h: 1920 },
+  tiktok:    { w: 1080, h: 1920 },
+  reels:     { w: 1080, h: 1920 },
+  shorts:    { w: 1080, h: 1920 },
+  facebook:  { w: 1080, h: 1920 },
   pinterest: { w: 1000, h: 1500 },
-  youtube: { w: 1280, h: 720 },
+  youtube:   { w: 1280, h: 720  },
+  linkedin:  { w: 1080, h: 1920 },
+  snapchat:  { w: 1080, h: 1920 },
 };
 
 const MAX_FILE_SIZE_MB = 200;
 
 export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = false }: Props) {
-  const [activePlatform, setActivePlatform] = useState<Platform>(defaultPlatform);
-  const [assetSrc, setAssetSrc] = useState<string | null>(null);
-  const [assetType, setAssetType] = useState<AssetType>("image");
-  const [isDragging, setIsDragging] = useState(false);
-  const [showGridOnly, setShowGridOnly] = useState(false);
-  const [frameStyle, setFrameStyle] = useState<FrameStyle>("none");
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [activePlatform,    setActivePlatform]    = useState<Platform>(defaultPlatform);
+  const [assetSrc,          setAssetSrc]          = useState<string | null>(null);
+  const [assetType,         setAssetType]         = useState<AssetType>("image");
+  const [isDragging,        setIsDragging]        = useState(false);
+  const [showGridOnly,      setShowGridOnly]      = useState(false);
+  const [frameStyle,        setFrameStyle]        = useState<FrameStyle>("none");
+  const [isDownloading,     setIsDownloading]     = useState(false);
   const [isGridDownloading, setIsGridDownloading] = useState(false);
-  const [fileError, setFileError] = useState<string | null>(null);
+  const [fileError,         setFileError]         = useState<string | null>(null);
 
   // Video-specific state
-  const [videoDuration, setVideoDuration] = useState(0);
+  const [videoDuration,   setVideoDuration]   = useState(0);
   const [videoCurrentTime, setVideoCurrentTime] = useState(0);
-  const [videoReady, setVideoReady] = useState(false);
+  const [videoReady,      setVideoReady]      = useState(false);
 
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasRef    = useRef<HTMLCanvasElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const videoElRef = useRef<HTMLVideoElement | null>(null);
+  const videoElRef   = useRef<HTMLVideoElement | null>(null);
 
   const isVertical = VERTICAL_PLATFORMS.includes(activePlatform);
 
@@ -60,17 +64,17 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
     (source: HTMLImageElement | HTMLVideoElement) => {
       if (!canvasRef.current) return;
       const canvas = canvasRef.current;
-      const ctx = canvas.getContext("2d");
+      const ctx    = canvas.getContext("2d");
       if (!ctx) return;
 
       const { w, h } = platformDimensions[activePlatform];
-      canvas.width = w;
+      canvas.width  = w;
       canvas.height = h;
 
-      const srcW = source instanceof HTMLVideoElement ? source.videoWidth : source.width;
+      const srcW = source instanceof HTMLVideoElement ? source.videoWidth  : source.width;
       const srcH = source instanceof HTMLVideoElement ? source.videoHeight : source.height;
 
-      const imgRatio = srcW / srcH;
+      const imgRatio    = srcW / srcH;
       const canvasRatio = w / h;
       let rW: number, rH: number, oX: number, oY: number;
 
@@ -122,10 +126,10 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
       setAssetSrc(url);
 
       const video = document.createElement("video");
-      video.src = url;
-      video.muted = true;
-      video.preload = "metadata";
-      video.playsInline = true;
+      video.src          = url;
+      video.muted        = true;
+      video.preload      = "metadata";
+      video.playsInline  = true;
       videoElRef.current = video;
 
       video.onloadedmetadata = () => {
@@ -186,9 +190,9 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
 
   // ── File input / drag handlers ─────────────────────────────────────────────
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => processFile(e.target.files?.[0]);
-  const handleDragOver = (e: React.DragEvent) => { e.preventDefault(); setIsDragging(true); };
-  const handleDragLeave = () => setIsDragging(false);
-  const handleDrop = (e: React.DragEvent) => { e.preventDefault(); setIsDragging(false); processFile(e.dataTransfer.files?.[0]); };
+  const handleDragOver   = (e: React.DragEvent) => { e.preventDefault(); setIsDragging(true); };
+  const handleDragLeave  = () => setIsDragging(false);
+  const handleDrop       = (e: React.DragEvent) => { e.preventDefault(); setIsDragging(false); processFile(e.dataTransfer.files?.[0]); };
 
   const handleClear = () => {
     if (assetSrc) URL.revokeObjectURL(assetSrc);
@@ -207,7 +211,7 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
     setIsDownloading(true);
     try {
       const a = document.createElement("a");
-      a.href = canvasRef.current.toDataURL("image/png");
+      a.href     = canvasRef.current.toDataURL("image/png");
       a.download = `safezonepreview-${activePlatform}${frameStyle !== "none" ? `-${frameStyle}-frame` : ""}${assetType === "video" ? `-frame-${Math.round(videoCurrentTime)}s` : ""}.png`;
       a.click();
     } finally { setIsDownloading(false); }
@@ -226,7 +230,7 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
       drawOverlays(ctx, w, h, activePlatform, true);
       if (isVertical && frameStyle !== "none") drawPhoneFrame(ctx, w, h, frameStyle);
       const a = document.createElement("a");
-      a.href = off.toDataURL("image/png");
+      a.href     = off.toDataURL("image/png");
       a.download = `safezone-grid-${activePlatform}.png`;
       a.click();
     } finally { setIsGridDownloading(false); }
@@ -258,16 +262,21 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
 
     if (gridOnly) {
       ctx.strokeStyle = "rgba(239,68,68,0.85)";
-      ctx.lineWidth = platform === "pinterest" ? 3 : 4;
+      ctx.lineWidth   = platform === "pinterest" ? 3 : 4;
       ctx.setLineDash([15, 10]);
       if (platform === "youtube") {
         ctx.strokeRect(w - 200, h - 60, 184, 44);
       } else if (platform === "pinterest") {
         ctx.strokeRect(50, 100, w - 100, h - 300);
       } else {
-        const top = 160;
-        const right = platform === "shorts" ? 160 : 140;
-        const bottom = platform === "tiktok" ? 480 : platform === "shorts" ? 420 : platform === "facebook" ? 420 : 380;
+        const top    = 160;
+        const right  = platform === "shorts" ? 160 : platform === "snapchat" ? 120 : 140;
+        const bottom = platform === "tiktok" ? 480
+          : platform === "shorts"   ? 420
+          : platform === "facebook" ? 420
+          : platform === "linkedin" ? 360
+          : platform === "snapchat" ? 320
+          : 380;
         ctx.beginPath(); ctx.moveTo(0, top); ctx.lineTo(w, top); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(w - right, top); ctx.lineTo(w - right, h - bottom); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(0, h - bottom); ctx.lineTo(w, h - bottom); ctx.stroke();
@@ -383,6 +392,81 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
       ctx.font = "bold 28px sans-serif"; ctx.fillText("Your Pin Title Here", 40, h - 130);
       ctx.font = "22px sans-serif"; ctx.fillStyle = "rgba(255,255,255,0.8)";
       ctx.fillText("yourwebsite.com", 40, h - 90);
+
+    } else if (platform === "linkedin") {
+      // Top bar — LinkedIn navy
+      const tg = ctx.createLinearGradient(0, 0, 0, 180);
+      tg.addColorStop(0, "rgba(10,102,194,0.55)"); tg.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = tg; ctx.fillRect(0, 0, w, 180);
+      // LinkedIn "in" logo top-left
+      ctx.fillStyle = "#0a66c2";
+      rrect(36, 36, 72, 72, 10, "#0a66c2");
+      ctx.font = "bold 44px sans-serif"; ctx.fillStyle = "#fff";
+      ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("in", 72, 74);
+      // Right-side reaction icons (LinkedIn video)
+      const cX = w - 76;
+      [820, 960, 1100, 1240].forEach(y => {
+        ctx.beginPath(); ctx.arc(cX, y, 36, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.12)"; ctx.fill();
+      });
+      // Bottom gradient + info bar
+      const bg = ctx.createLinearGradient(0, h - 400, 0, h);
+      bg.addColorStop(0, "rgba(0,0,0,0)"); bg.addColorStop(1, "rgba(0,0,0,0.72)");
+      ctx.fillStyle = bg; ctx.fillRect(0, h - 400, w, 400);
+      ctx.textAlign = "left"; ctx.textBaseline = "alphabetic"; ctx.fillStyle = "#fff";
+      ctx.font = "bold 30px sans-serif"; ctx.fillText("Your Name · 1st", 50, h - 300);
+      ctx.font = "22px sans-serif"; ctx.fillStyle = "rgba(255,255,255,0.8)";
+      ctx.fillText("Job Title · Company", 50, h - 260);
+      ctx.fillText("Your video caption goes here... #LinkedIn", 50, h - 210);
+      // Like + Comment counts
+      ctx.fillStyle = "rgba(255,255,255,0.55)"; ctx.font = "22px sans-serif";
+      ctx.fillText("👍 124  💬 18  ↗ Share", 50, h - 150);
+      // Follow button
+      rrect(50, h - 110, 160, 50, 25, "rgba(255,255,255,0.2)");
+      ctx.font = "bold 24px sans-serif"; ctx.fillStyle = "#fff";
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText("+ Follow", 130, h - 85);
+
+    } else if (platform === "snapchat") {
+      // Snapchat top bar — ghost logo + time
+      const tg = ctx.createLinearGradient(0, 0, 0, 200);
+      tg.addColorStop(0, "rgba(0,0,0,0.5)"); tg.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = tg; ctx.fillRect(0, 0, w, 200);
+      // Ghost icon (simplified circle placeholder)
+      ctx.beginPath(); ctx.arc(w / 2, 60, 32, 0, Math.PI * 2);
+      ctx.fillStyle = "#FFFC00"; ctx.fill();
+      ctx.font = "bold 34px sans-serif"; ctx.fillStyle = "#000";
+      ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("👻", w / 2, 62);
+      // Timer top-right
+      ctx.font = "bold 28px sans-serif"; ctx.fillStyle = "#fff";
+      ctx.textAlign = "right"; ctx.textBaseline = "top";
+      ctx.fillText("⏱ 0:15", w - 40, 40);
+      // Right-side icons (Snap)
+      const cX = w - 72;
+      [840, 980, 1120].forEach(y => {
+        ctx.beginPath(); ctx.arc(cX, y, 36, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.15)"; ctx.fill();
+      });
+      // Bottom gradient + info
+      const bg = ctx.createLinearGradient(0, h - 360, 0, h);
+      bg.addColorStop(0, "rgba(0,0,0,0)"); bg.addColorStop(1, "rgba(0,0,0,0.65)");
+      ctx.fillStyle = bg; ctx.fillRect(0, h - 360, w, 360);
+      ctx.textAlign = "left"; ctx.textBaseline = "alphabetic"; ctx.fillStyle = "#fff";
+      ctx.font = "bold 30px sans-serif"; ctx.fillText("@your_username", 50, h - 250);
+      ctx.font = "26px sans-serif"; ctx.fillStyle = "rgba(255,255,255,0.85)";
+      ctx.fillText("Your Spotlight caption here 🔥", 50, h - 200);
+      // Subscribe button
+      rrect(50, h - 160, 200, 52, 26, "#FFFC00");
+      ctx.font = "bold 24px sans-serif"; ctx.fillStyle = "#000";
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText("Subscribe", 150, h - 134);
+      // Bottom nav bar
+      ctx.fillStyle = "rgba(0,0,0,0.6)";
+      ctx.fillRect(0, h - 80, w, 80);
+      ["📷", "🔍", "💬", "👤"].forEach((icon, i) => {
+        ctx.font = "32px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText(icon, (w / 4) * i + w / 8, h - 40);
+      });
     }
   };
 
@@ -441,10 +525,11 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
                 <button
                   key={p}
                   onClick={() => { setActivePlatform(p); if (!VERTICAL_PLATFORMS.includes(p)) setFrameStyle("none"); }}
-                  className={`px-4 py-2 text-left rounded-lg font-medium transition-all ${activePlatform === p
+                  className={`px-4 py-2 text-left rounded-lg font-medium transition-all ${
+                    activePlatform === p
                       ? "bg-blue-600 text-white shadow-md"
                       : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-                    }`}
+                  }`}
                 >
                   {platformLabel[p]}
                 </button>
@@ -552,17 +637,18 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
                 </h3>
                 <div className="flex flex-col gap-2">
                   {([
-                    { value: "none", label: "No Frame" },
-                    { value: "iphone", label: "iPhone Frame" },
+                    { value: "none",    label: "No Frame"      },
+                    { value: "iphone",  label: "iPhone Frame"  },
                     { value: "android", label: "Android Frame" },
                   ] as { value: FrameStyle; label: string }[]).map(({ value, label }) => (
                     <button
                       key={value}
                       onClick={() => setFrameStyle(value)}
-                      className={`px-4 py-2 text-left rounded-lg text-sm font-medium transition-all ${frameStyle === value
+                      className={`px-4 py-2 text-left rounded-lg text-sm font-medium transition-all ${
+                        frameStyle === value
                           ? "bg-violet-600 text-white shadow-md"
                           : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-                        }`}
+                      }`}
                     >
                       {label}
                     </button>
@@ -611,21 +697,26 @@ export default function SafeZoneCanvas({ defaultPlatform = "tiktok", locked = fa
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        className={`lg:col-span-3 flex justify-center items-center rounded-xl p-4 min-h-[550px] border-2 border-dashed transition-colors ${isDragging ? "border-blue-500 bg-blue-950/30" : "border-slate-600 bg-slate-900"
-          }`}
+        className={`lg:col-span-3 flex justify-center items-center rounded-xl p-4 min-h-[550px] border-2 border-dashed transition-colors ${
+          isDragging ? "border-blue-500 bg-blue-950/30" : "border-slate-600 bg-slate-900"
+        }`}
       >
         {hasAsset ? (
           <div className="relative shadow-xl max-h-[600px] overflow-auto bg-slate-950 rounded-lg p-2 w-full flex flex-col items-center gap-3">
             <canvas
               ref={canvasRef}
-              className={`max-h-[540px] w-auto h-auto object-contain mx-auto block ${activePlatform === "youtube" ? "aspect-video" : "aspect-[9/16]"
-                }`}
+              className={`max-h-[540px] w-auto h-auto object-contain mx-auto block ${
+                activePlatform === "youtube" ? "aspect-video"
+                : activePlatform === "pinterest" ? "aspect-[2/3]"
+                : "aspect-[9/16]"
+              }`}
             />
             {/* Asset type badge */}
-            <span className={`absolute top-4 left-4 text-xs font-semibold px-2 py-1 rounded-full ${assetType === "video"
+            <span className={`absolute top-4 left-4 text-xs font-semibold px-2 py-1 rounded-full ${
+              assetType === "video"
                 ? "bg-violet-600/80 text-white"
                 : "bg-blue-600/80 text-white"
-              }`}>
+            }`}>
               {assetType === "video" ? "🎬 Video frame" : "🖼 Image"}
             </span>
           </div>

@@ -21,6 +21,8 @@ export default function Home() {
             <strong className="text-slate-200">Instagram Reels safe zone</strong>,{" "}
             <strong className="text-slate-200">Facebook Reels safe zone</strong>,{" "}
             <strong className="text-slate-200">Pinterest safe zone</strong>,{" "}
+            <strong className="text-slate-200">LinkedIn safe zone</strong>,{" "}
+            <strong className="text-slate-200">Snapchat safe zone</strong>,{" "}
             <strong className="text-slate-200">YouTube Shorts safe zone</strong>, and{" "}
             <strong className="text-slate-200">YouTube Thumbnail safe zone</strong> — all in one
             place. No login, no watermark, completely free.
@@ -117,6 +119,28 @@ export default function Home() {
                 <>
                   Pinterest blocks the bottom with pin info and save button. Preview the{" "}
                   <strong className="text-slate-200">Pinterest safe zone</strong> before you create new pins
+                  to make sure no critical text or logo is cut off.
+                </>
+              ),
+            },
+             {
+              title: "LinkedIn Safe Zone",
+              href: "/linkedin-safe-zone",
+              body: (
+                <>
+                  LinkedIn blocks the right side with reaction icon stack; the top with the logo, and the bottom gradient with name, job title, caption, engagement count. Preview the{" "}
+                  <strong className="text-slate-200">LinkedIn safe zone</strong> before you post new videos
+                  to make sure no critical text or logo is cut off.
+                </>
+              ),
+            },
+             {
+              title: "Snapchat Safe Zone",
+              href: "/snapchat-safe-zone",
+              body: (
+                <>
+                  In Snapchat there is ghost emoji logo at centre-top, countdown timer top-right, right-side icon stack blocks the right side, bottom gradient with username, yellow Subscribe button, caption, and the 4-icon bottom navigation bar blocks the bottom. The bottom nav bar is unique to Snapchat — no other platform in the tool has a persistent tab bar like this. Preview the{" "}
+                  <strong className="text-slate-200">snapchat safe zone</strong> 
                   to make sure no critical text or logo is cut off.
                 </>
               ),
