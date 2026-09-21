@@ -35,6 +35,14 @@ export default function Home() {
           className="w-full max-w-6xl bg-slate-800 rounded-2xl shadow-xl border border-slate-700 p-6"
         >
           <SafeZoneCanvas />
+          <a
+            href="/downloads/safe-zone-overlay-pack.zip"
+            download
+            className="inline-flex items-center gap-2 px-5 py-3 bg-indigo-700 hover:bg-indigo-600 text-white font-semibold rounded-lg text-sm transition-colors"
+          >
+            <DownloadIcon />
+            Download Free Overlay Pack — All 9 Platforms (ZIP)
+          </a>
         </section>
 
         {/* ── Platform Cards ── */}
@@ -360,5 +368,13 @@ export default function Home() {
         </footer>
       </main>
     </>
+  );
+}
+
+function DownloadIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" />
+    </svg>
   );
 }
