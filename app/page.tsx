@@ -25,7 +25,8 @@ export default function Home() {
             <strong className="text-slate-200">Snapchat safe zone</strong>,{" "}
             <strong className="text-slate-200">YouTube Shorts safe zone</strong>, and{" "}
             <strong className="text-slate-200">YouTube Thumbnail safe zone</strong> — all in one
-            place. No login, no watermark, completely free.
+            place. Download free transparent overlay templates for
+            Canva, Figma, CapCut, and Premiere. No login, no watermark, completely free.
           </p>
         </header>
 
@@ -42,6 +43,29 @@ export default function Home() {
           >
             <DownloadIcon />
             Download Free Overlay Pack — All 9 Platforms (ZIP)
+          </a>
+        </section>
+
+        {/* ── Overlay Pack CTA ── */}
+        <section className="max-w-4xl w-full mt-8 bg-slate-800 rounded-xl border border-slate-700 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-bold text-white mb-1">
+              Free Safe Zone Overlay Template Pack
+            </h2>
+            <p className="text-sm text-slate-400">
+              All 9 platforms as transparent PNG overlays — ready to import into
+              Canva, Figma, CapCut, Premiere, or After Effects.
+            </p>
+          </div>
+          <a
+            href="/downloads/safe-zone-overlay-pack.zip"
+            download
+            className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-indigo-700 hover:bg-indigo-600 text-white font-semibold rounded-lg text-sm transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" />
+            </svg>
+            Download Free Pack (ZIP)
           </a>
         </section>
 
@@ -224,6 +248,10 @@ export default function Home() {
                 q: "Is my uploaded image or video kept private?",
                 a: "Yes — completely. All processing happens entirely in your browser using the HTML Canvas API. Your images and videos are never uploaded to any server, never stored, and never seen by anyone. When you clear your file or close the tab, the data is released from memory immediately. There is no account, no tracking, and no data collection of any kind.",
               },
+              {
+                q: "Can I download the safe zone overlay as a template for Canva, Figma, or Premiere?",
+                a: "Yes — you can download a free transparent PNG overlay for any platform directly from its safe zone page, or download the full pack (all 9 platforms) as a ZIP from the homepage. Each PNG has a fully transparent background with only the dashed safe zone boundary lines drawn. Import it into Canva, Figma, CapCut, Adobe Premiere, or After Effects as a locked guide layer on top of your design.",
+              },
             ].map(({ q, a }) => (
               <details
                 key={q}
@@ -317,7 +345,14 @@ export default function Home() {
             <strong className="text-slate-200">YouTube Shorts safe zone template</strong> you can
             reuse indefinitely.
           </p>
-
+          <p className="text-slate-400">
+            In addition to the live preview, every platform page offers a free
+            transparent PNG overlay download — the same dashed safe zone boundary
+            lines with a fully transparent background, ready to import directly
+            into Canva, Figma, CapCut, Adobe Premiere, or After Effects as a
+            locked guide layer. A full overlay template pack containing all 9
+            platforms is also available as a single ZIP download from the homepage.
+          </p>
           <h3 className="text-xl font-bold text-white mt-8 mb-3">
             Who Should Use a Safe Zone Checker
           </h3>
@@ -336,6 +371,7 @@ export default function Home() {
             content stays private. There is no account to create, no subscription to manage, and no
             watermark added to your work. Just upload, preview, and post with confidence.
           </p>
+
         </section>
 
         {/* ── Footer ── */}
@@ -363,7 +399,8 @@ export default function Home() {
             Pinterest Safe Zone (1000×1500, 2:3)
           </p>
           <p className="text-xs text-slate-600 text-center mt-2">
-            Built for creators who want to design with confidence — no guessing, no cropped text.
+            Built for creators who want to design with confidence — no guessing, no cropped text. Free transparent overlay templates available for all platforms ·
+            No login required
           </p>
         </footer>
       </main>

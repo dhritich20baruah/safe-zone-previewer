@@ -136,6 +136,22 @@ export default function SnapchatSafeZonePage() {
                 </Link>
               ))}
             </div>
+            <div className="max-w-3xl mt-6 flex flex-col sm:flex-row gap-3">
+              <a
+                href="/downloads/overlays/snapchat-safe-zone.png"  
+                download
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-indigo-700 hover:bg-indigo-600 text-white font-semibold rounded-lg text-sm transition-colors"
+              >
+                Download Snapchat Safe Zone Overlay PNG
+              </a>
+              <a
+                href="/downloads/safe-zone-overlay-pack.zip"
+                download
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 m-3 bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold rounded-lg text-sm transition-colors"
+              >
+                Download All Platforms (ZIP)
+              </a>
+            </div>
           </section>
 
         </div>

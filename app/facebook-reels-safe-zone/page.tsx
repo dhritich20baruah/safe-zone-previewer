@@ -35,12 +35,12 @@ export default function FacebookReelsSafeZonePage() {
             <h2 className="text-2xl font-bold text-white mb-4">Facebook Reels Safe Zone Dimensions</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
-                { label: "Canvas Size",   value: "1080 × 1920 px" },
-                { label: "Aspect Ratio",  value: "9:16"           },
-                { label: "Right Margin",  value: "~130 px"        },
-                { label: "Top Margin",    value: "~160 px"        },
-                { label: "Bottom Margin", value: "~420 px"        },
-                { label: "Safe Width",    value: "~950 px"        },
+                { label: "Canvas Size", value: "1080 × 1920 px" },
+                { label: "Aspect Ratio", value: "9:16" },
+                { label: "Right Margin", value: "~130 px" },
+                { label: "Top Margin", value: "~160 px" },
+                { label: "Bottom Margin", value: "~420 px" },
+                { label: "Safe Width", value: "~950 px" },
               ].map(({ label, value }) => (
                 <div key={label} className="bg-slate-800 rounded-xl border border-slate-700 p-4">
                   <p className="text-xs text-slate-500 mb-1">{label}</p>
@@ -82,20 +82,36 @@ export default function FacebookReelsSafeZonePage() {
               {[
                 { href: "/instagram-reels-safe-zone", label: "Instagram Reels Safe Zone" },
                 { href: "/instagram-story-safe-zone", label: "Instagram Story Safe Zone" },
-                { href: "/tiktok-safe-zone",          label: "TikTok Safe Zone"          },
-                { href: "/youtube-shorts-safe-zone",  label: "YouTube Shorts Safe Zone"  },
-                { href: "/pinterest-safe-zone",       label: "Pinterest Safe Zone"        },
-                { href: "/",                          label: "All Platforms"             },
+                { href: "/tiktok-safe-zone", label: "TikTok Safe Zone" },
+                { href: "/youtube-shorts-safe-zone", label: "YouTube Shorts Safe Zone" },
+                { href: "/pinterest-safe-zone", label: "Pinterest Safe Zone" },
+                { href: "/", label: "All Platforms" },
               ].map(({ href, label }) => (
                 <Link key={href} href={href} className="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-blue-500 text-slate-300 hover:text-white rounded-lg text-sm transition-all">
                   {label} →
                 </Link>
               ))}
             </div>
+            <div className="max-w-3xl mt-6 flex flex-col sm:flex-row gap-3">
+              <a
+                href="/downloads/overlays/facebook-reels-safe-zone.png"  
+                download
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-indigo-700 hover:bg-indigo-600 text-white font-semibold rounded-lg text-sm transition-colors"
+              >
+                Download Facebook Reels Safe Zone Overlay PNG
+              </a>
+              <a
+                href="/downloads/safe-zone-overlay-pack.zip"
+                download
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 m-3 bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold rounded-lg text-sm transition-colors"
+              >
+                Download All Platforms (ZIP)
+              </a>
+            </div>
           </section>
 
-        </div>
-      </main>
+        </div >
+      </main >
     </>
   );
 }
